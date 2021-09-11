@@ -857,9 +857,10 @@ static EFI_STATUS generate_path_from_image_path(EFI_LOADED_IMAGE *li,
 		bootpath[j] = '\0';
 	}
 
-	for (i = 0, last = 0; i < StrLen(ImagePath); i++)
+	for (i = 0, last = 0; i < StrLen(ImagePath); i++){
 		if (ImagePath[i] == '\\')
 			last = i + 1;
+	}
 
 		ImagePath = ImagePath + last;
 		*PathName = AllocatePool(StrSize(bootpath) + StrSize(ImagePath));
@@ -1977,7 +1978,7 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 
 	if (EFI_ERROR (status)) 
 	{
-		//Print(L"EFI_LOADED_IMAGE_PROTOCOL Error!\n");
+		dprint(L"EFI_LOADED_IMAGE_PROTOCOL Error!\n");
 		return status;
 	}
 
@@ -1987,7 +1988,7 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 
 	if (EFI_ERROR (status)) 
 	{
-		//Print(L"EFI_DEVICE_PATH_PROTOCOL Error!\n");
+		dprint(L"EFI_DEVICE_PATH_PROTOCOL Error!\n");
 		return status;
 	}
 
@@ -2021,9 +2022,6 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 	RtStrCat(s_file_path, file_name);
 
 
-	/*Print(L"\n\rWrite to: ");
-	Print(s_file_path);
-	Print(L"\n\r");*/
 	ST->ConOut->OutputString(ST->ConOut, L"\n\rWrite to: ");
 	ST->ConOut->OutputString(ST->ConOut, s_file_path);
 	ST->ConOut->OutputString(ST->ConOut, L"\n\r");
@@ -2037,7 +2035,7 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 
 	if (EFI_ERROR (status)) 
 	{
-		//Print(L"EFI_SIMPLE_FILE_SYSTEM_PROTOCOL not found!\n");
+		dprint(L"EFI_SIMPLE_FILE_SYSTEM_PROTOCOL not found!\n");
 		return status;
 	}
             // если всё ОК - то пытаемся открыть том файловой системы, здесь как раз и получаем указатель на экземпляр протокола EFI_FILE_PROTOCOL для чтения/записи в него
@@ -2045,7 +2043,7 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 
 	if (EFI_ERROR (status)) 
 	{
-		//Print(L"EFI_SIMPLE_FILE_SYSTEM_PROTOCOL Error open!\n");
+		dprint(L"EFI_SIMPLE_FILE_SYSTEM_PROTOCOL Error open!\n");
 		return status;
 	}
             // создаём файл
@@ -2053,7 +2051,7 @@ efi_main (EFI_HANDLE passed_image_handle, EFI_SYSTEM_TABLE *passed_systab)
 
 	if (EFI_ERROR (status)) 
 	{
-		//Print(L"EFI_SIMPLE_FILE_PROTOCOL Error open!\n");
+		dprint(L"EFI_SIMPLE_FILE_PROTOCOL Error open!\n");
 		return status;
 	}
 
